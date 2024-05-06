@@ -7,7 +7,7 @@ SOURCES = main.c
 BUILD_DIR = build
 
 %.o: %.bin %.elf %.elf.map  # Matches all .c files and creates corresponding .o files
-	$(CC) $(CFLAGS) -o $(BUILD_DIR)/$@ $<  # Compile and place the output in build/
+	$(CC) $(CFLAGS) -o ../$(BUILD_DIR)/$@ $<  # Compile and place the output in build/
 
 ifeq ($(OS),Windows_NT)
   RM = cmd /C del /Q /F
@@ -18,13 +18,13 @@ endif
 build: firmware.bin
 
 firmware.elf: $(SOURCES)
-	arm-none-eabi-gcc $(SOURCES) $(CFLAGS) $(LDFLAGS) -o $(BUILD_DIR)/$@
+	arm-none-eabi-gcc $(SOURCES) $(CFLAGS) $(LDFLAGS) -o ../$(BUILD_DIR)/$@
 
 firmware.bin: firmware.elf
-	arm-none-eabi-objcopy -O binary $(BUILD_DIR)/$< $(BUILD_DIR)/$@
+	arm-none-eabi-objcopy -O binary ../$(BUILD_DIR)/$< ../$(BUILD_DIR)/$@
 
 flash: firmware.bin
-	st-flash --reset write $(BUILD_DIR)/$< 0x8000000
+	st-flash --reset write ../$(BUILD_DIR)/$< 0x8000000
 
 clean:
 	$(RM) firmware.*
